@@ -1,4 +1,4 @@
-CREATE DATABASE Camvi;
+-- CREATE DATABASE Camvi;
 USE Camvi;
 
 CREATE TABLE tbTipoUsuarios
@@ -21,13 +21,17 @@ CREATE TABLE tbUsuarios
     contacto    VARCHAR(15),
     imagen      IMAGE,
     dui         VARCHAR(10),
-    pass        VARCHAR(25),
+    pass        NVARCHAR(50),
     tipoUsuario INT
 );
 
 ALTER TABLE tbUsuarios
+    ADD CONSTRAINT UQ_tbUsuarios_correos UNIQUE (correo);
+
+ALTER TABLE tbUsuarios
     ADD CONSTRAINT FK_tbUsuarios_tbTipoUsuario FOREIGN KEY (tipoUsuario)
         REFERENCES tbTipoUsuarios (idTipoUsuario);
+
 
 INSERT INTO tbUsuarios (correo, nombre, contacto, imagen, dui, pass, tipoUsuario)
 VALUES ('20190189@ricaldone.edu.sv', 'Víctor López', '7010-2904', NULL, 'No tengo', '1234', 1);
@@ -42,16 +46,15 @@ CREATE TABLE tbCamarografos
     imageSinFondo     IMAGE
 );
 
+ALTER TABLE tbCamarografos
+    ADD CONSTRAINT FK_tbCamarografos_tbUsuarios FOREIGN KEY (idUsuario)
+        REFERENCES tbUsuarios (idUsuario);
+
 CREATE TABLE tbClientes
 (
     idCliente           INT PRIMARY KEY IDENTITY (1, 1),
     informacionCompleta BIT DEFAULT 0,
 );
-
-ALTER TABLE tbCamarografos
-    ADD CONSTRAINT FK_tbCamarografos_tbUsuarios FOREIGN KEY (idUsuario)
-        REFERENCES tbUsuarios (idUsuario);
-
 
 CREATE TABLE tbFotosGaleria
 (
