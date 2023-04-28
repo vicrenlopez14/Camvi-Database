@@ -17,13 +17,4 @@ BEGIN
 END
 GO
 
-SELECT *
-FROM tbUsuarios
-
-SELECT *
-FROM tbUsuarios
-WHERE correo = 'correo@example.com'
-  AND pass = 'micontraseña';
-
-SELECT dbo.fnIniciarSesion('ejemplo@example.com', 'micontrasena')
-
+SELECT dbo.fnIniciarSesion('20190189@ricaldone.edu.sv', '1234') AS TipoUsuario

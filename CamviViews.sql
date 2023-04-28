@@ -1,4 +1,5 @@
 USE Camvi
+GO
 
 CREATE VIEW vwSesionesPorConfirmar
 AS

@@ -1,3 +1,5 @@
+-- USE master
+-- DROP DATABASE Camvi
 -- CREATE DATABASE Camvi;
 USE Camvi;
 
@@ -119,6 +121,12 @@ CREATE TABLE tbCalificacionSesion
     clienteId                     INT,
     sesionId                      INT
 );
+
+-- Calificación promedio
+ALTER TABLE tbCalificacionSesion
+    ADD promedio AS
+            (puntualidadFotografo + actitudFotografo + desempenoFotografo + profesionalismoFotografo +
+             presentacionPersonalFotografo + servicioDeAtencion + esperaDeRespuestas + calidadDelProductoFinal) / 8.0;
 
 ALTER TABLE tbCalificacionSesion
     ADD CONSTRAINT FK_tbCalificacionSesion_tbUsuarios FOREIGN KEY (clienteId)
