@@ -115,4 +115,13 @@ GO
 SELECT *
 FROM vwEstadisticaSesionesEnCurso;
 
+CREATE VIEW vwCamarografos
+AS
+	SELECT u.nombre, u.imagen
+	FROM tbUsuarios u
+	WHERE u.tipoUsuario=2
+GO
+
+SELECT * FROM vwCamarografos
+
 
