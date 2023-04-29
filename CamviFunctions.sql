@@ -17,4 +17,4 @@ BEGIN
 END
 GO
 
-SELECT dbo.fnIniciarSesion('20190189@ricaldone.edu.sv', '1234') AS TipoUsuario
+SELECT dbo.fnIniciarSesion('susancasoli@gmail.com', '1234') AS TipoUsuario

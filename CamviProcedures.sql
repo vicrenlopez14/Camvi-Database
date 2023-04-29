@@ -11,7 +11,7 @@ BEGIN
 
     BEGIN TRY
         INSERT INTO tbUsuarios(nombre, correo, pass, contacto, dui, tipoUsuario)
-        VALUES (@nombre, @correo, @pass, @contacto, @dui, 1);
+        VALUES (@nombre, @correo, @pass, @contacto, @dui, 3);
         INSERT INTO @result (Result) VALUES (1);
     END TRY
     BEGIN CATCH
