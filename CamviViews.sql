@@ -121,7 +121,25 @@ AS
 	FROM tbUsuarios u
 	WHERE u.tipoUsuario=2
 GO
-
 SELECT * FROM vwCamarografos
 
 
+CREATE VIEW vwSesionesAgendadasHoy
+AS
+	SELECT f.foto, s.titulo, u.nombre, s.fechaEvento
+	FROM tbSesiones s
+	INNER JOIN tbFotosGaleria f ON s.idFotoGaleria=f.idFoto
+	INNER JOIN tbUsuarios u ON s.idCliente=u.idUsuario
+	INNER JOIN tbTipoUsuarios o ON u.idUsuario=o.idTipoUsuario
+	WHERE s.fechaEvento=CONVERT(nvarchar,GETDATE())
+GO
+
+CREATE VIEW vwSinCamareografo
+AS
+	SELECT tbFotosGaleria.foto, tbSesiones.titulo, tbSesiones.fechaEvento, tbSesiones.idFotografo
+	FROM tbSesiones 
+	INNER JOIN tbFotosGaleria ON tbSesiones.idFotoGaleria=tbFotosGaleria.idFoto
+	WHERE tbSesiones.idFotografo IS NULL;
+GO
+	SELECT * from vwSinCamareografo;
+GO
