@@ -181,3 +181,6 @@ CREATE TABLE tbCodigosRecuperacion
 ALTER TABLE tbCodigosRecuperacion
     ADD CONSTRAINT FK_tbCodigosRecuperacion_tbUsuarios FOREIGN KEY (usuario)
         REFERENCES tbUsuarios (idUsuario);
+
+
+
