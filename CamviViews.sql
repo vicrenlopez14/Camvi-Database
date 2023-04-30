@@ -125,13 +125,3 @@ GO
 
 SELECT *
 FROM vwListaDeCamarografos
-
--- Fill out the tbUsuarios
-INSERT INTO tbUsuarios (nombre, correo, tipoUsuario)
-VALUES ('Sosita', 'sosita@gmail.com', 2),
-       ('Adriana', 'Adriana@gmail.com', 2),
-       ('Susan', 'Susan@gmail.com', 2),
-       ('Víctor', 'Víctor@gmail.com', 2)
-
-INSERT INTO tbUsuarios (nombre, correo, tipoUsuario)
-VALUES ('Hazel', 'hazel@gmail.com', 2)

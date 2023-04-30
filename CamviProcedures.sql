@@ -24,6 +24,16 @@ GO
 
 EXEC spRegistrarCliente '?', '?a', '123', '123', '123'
 
-
+CREATE PROCEDURE spCodigoRecuperacion
+	@idUsuario INT
+AS
+BEGIN
+	DECLARE @codigo INT;
+	SET @codigo = (SELECT ROUND(((9999 - 1000) * RAND() + 1), 0))
+	INSERT INTO tbCodigosRecuperacion VALUES(@codigo,@idUsuario)
+END
+GO
+EXEC spCodigoRecuperacion 2
+GO
 
 
