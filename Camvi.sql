@@ -125,8 +125,8 @@ CREATE TABLE tbCalificacionSesion
 -- Calificación promedio
 ALTER TABLE tbCalificacionSesion
     ADD promedio AS
-            (puntualidadFotografo + actitudFotografo + desempenoFotografo + profesionalismoFotografo +
-             presentacionPersonalFotografo + servicioDeAtencion + esperaDeRespuestas + calidadDelProductoFinal) / 8.0;
+            ((puntualidadFotografo + actitudFotografo + desempenoFotografo + profesionalismoFotografo +
+             presentacionPersonalFotografo + servicioDeAtencion + esperaDeRespuestas + calidadDelProductoFinal) / 8.0) * 100;
 
 ALTER TABLE tbCalificacionSesion
     ADD CONSTRAINT FK_tbCalificacionSesion_tbUsuarios FOREIGN KEY (clienteId)

@@ -125,3 +125,8 @@ GO
 
 SELECT *
 FROM vwListaDeCamarografos
+
+CREATE VIEW vwPorcentajeClienteSatisfechos
+AS
+	SELECT SUM(promedio)/ COUNT(*)  as [Clientes satisfechos] from tbCalificacionSesion WHERE promedio >= 80.0
+GO
