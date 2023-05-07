@@ -92,3 +92,25 @@ EXEC spCodigoRecuperacion 2
 GO
 
 
+CREATE PROCEDURE spInsertarCalificacion
+	@puntualidadFotografo          SMALLINT,
+    @actitudFotografo              SMALLINT,
+    @desempenoFotografo            SMALLINT,
+    @profesionalismoFotografo      SMALLINT,
+    @presentacionPersonalFotografo SMALLINT,
+    @servicioDeAtencion            SMALLINT,
+    @esperaDeRespuestas            SMALLINT,
+    @calidadDelProductoFinal       SMALLINT,
+    @comentarios                   VARCHAR(255),
+    @clienteId                     INT,
+    @sesionId                      INT
+AS
+BEGIN
+	INSERT INTO tbCalificacionSesion (puntualidadFotografo, actitudFotografo,desempenoFotografo, profesionalismoFotografo,presentacionPersonalFotografo,servicioDeAtencion, 
+	esperaDeRespuestas,calidadDelProductoFinal,comentarios,clienteId,sesionId) 
+	VALUES(@puntualidadFotografo,@actitudFotografo,@desempenoFotografo,@profesionalismoFotografo,@presentacionPersonalFotografo,
+	@servicioDeAtencion,@esperaDeRespuestas,@calidadDelProductoFinal,@comentarios,@clienteId,@sesionId)
+END
+GO
+
+
