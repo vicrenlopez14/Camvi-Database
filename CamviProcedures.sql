@@ -123,3 +123,48 @@ SET correo = @correo,
 WHERE idUsuario = @idUsuario
 END
 GO
+
+-- Calificar sesión
+CREATE PROCEDURE spCalificarSesion
+	@puntualidad SMALLINT,
+	@actitud SMALLINT,
+	@desempenio SMALLINT,
+	@profesionalismo SMALLINT,
+	@presentacion SMALLINT,
+	@servicioAtencion SMALLINT,
+	@espera SMALLINT,
+	@calidadProducto SMALLINT,
+	@comentarios VARCHAR(255),
+	@idCliente INT,
+	@idSesion INT
+AS
+BEGIN 
+	INSERT INTO tbCalificacionSesion (puntualidadFotografo, actitudFotografo, 
+	desempenoFotografo, profesionalismoFotografo, presentacionPersonalFotografo, 
+	servicioDeAtencion, esperaDeRespuestas, calidadDelProductoFinal, comentarios, clienteId, sesionId)
+	VALUES (@puntualidad, @actitud, @desempenio, @profesionalismo, @presentacion, @servicioAtencion, @espera, @calidadProducto, 
+	@comentarios, @idCliente, @idSesion)
+END
+GO
+
+-- Agendar cita
+CREATE PROCEDURE spAgendarCita
+	@titulo VARCHAR(25),
+	@detalles VARCHAR(255),
+	@idFotoGaleria INT,
+	@direccion VARCHAR(200),
+	@fechaEvento DATE,
+	@horaInicio TIME,
+	@horaFin TIME,
+	@lugar VARCHAR,
+	@confirmada BIT,
+	@cancela BIT,
+	@idFotografo INT,
+	@idCliente INT
+AS
+BEGIN 
+	INSERT INTO tbSesiones(titulo, detalles, idFotoGaleria, direccionEvento, 
+	fechaEvento, horaInicio, horaFinalizacion, lugar, confirmada, cancelada, idFotografo, idCliente)
+	VALUES(@titulo, @detalles, @idFotoGaleria, @direccion, @fechaEvento, @horaInicio, @horaFin, @lugar, 
+	@confirmada, @cancela, @idFotografo, @idCliente)
+END
