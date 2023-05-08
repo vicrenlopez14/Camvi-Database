@@ -92,3 +92,34 @@ EXEC spCodigoRecuperacion 2
 GO
 
 
+-- Limpiar notificaciones
+CREATE PROCEDURE spLimpiarNotificaciones
+	@idUsuario INT
+AS
+BEGIN
+	DELETE FROM tbNotificaciones
+	WHERE usuarioId = @idUsuario
+END
+GO
+
+-- Actualizar informaci�n propia
+CREATE PROCEDURE spActualizarCamarografo
+	@correo VARCHAR(255),
+	@nombre NVARCHAR(50),
+	@telefono varchar(15),
+	@imagen IMAGE,
+	@dui VARCHAR(10),
+	@contra NVARCHAR(50),
+	@idUsuario INT
+AS 
+BEGIN
+UPDATE tbUsuarios
+SET correo = @correo,
+	nombre = @nombre,
+	contacto = @telefono,
+	imagen = @imagen,
+	dui = @dui,
+	pass = @contra
+WHERE idUsuario = @idUsuario
+END
+GO
