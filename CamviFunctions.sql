@@ -39,3 +39,17 @@ RETURN
 	INNER JOIN tbUsuarios U ON n.usuarioId=U.idUsuario
 	WHERE n.usuarioId=@idUsuario AND n.vista=0;
 GO
+
+
+CREATE FUNCTION fnVerMasSesion(@idSesion int)
+RETURNS TABLE
+AS
+RETURN
+		SELECT s.titulo, s.detalles, s.lugar, s.fechaEvento, s.horaInicio, s.horaFinalizacion, u.nombre, u.contacto, u.dui
+	FROM tbSesiones s
+	INNER JOIN tbUsuarios u ON s.idCliente= u.idUsuario
+	WHERE s.idSesion = @idSesion;
+GO
+
+SELECT * FROM fnVerMasSesion(2)
+

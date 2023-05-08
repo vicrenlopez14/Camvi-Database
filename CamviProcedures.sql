@@ -101,16 +101,32 @@ CREATE PROCEDURE spInsertarCalificacion
     @servicioDeAtencion            SMALLINT,
     @esperaDeRespuestas            SMALLINT,
     @calidadDelProductoFinal       SMALLINT,
-    @comentarios                   VARCHAR(255),
-    @clienteId                     INT,
-    @sesionId                      INT
+    @comentarios                   VARCHAR(255)
+    --@clienteId                     INT,
+    --@sesionId                      INT
 AS
 BEGIN
+	DECLARE @result TABLE
+                    (
+                        Result INT
+                    );
+	BEGIN TRY
 	INSERT INTO tbCalificacionSesion (puntualidadFotografo, actitudFotografo,desempenoFotografo, profesionalismoFotografo,presentacionPersonalFotografo,servicioDeAtencion, 
-	esperaDeRespuestas,calidadDelProductoFinal,comentarios,clienteId,sesionId) 
+	esperaDeRespuestas,calidadDelProductoFinal,comentarios) 
 	VALUES(@puntualidadFotografo,@actitudFotografo,@desempenoFotografo,@profesionalismoFotografo,@presentacionPersonalFotografo,
-	@servicioDeAtencion,@esperaDeRespuestas,@calidadDelProductoFinal,@comentarios,@clienteId,@sesionId)
+	@servicioDeAtencion,@esperaDeRespuestas,@calidadDelProductoFinal,@comentarios)
+	INSERT INTO @result (Result) VALUES (1);
+	END TRY
+	BEGIN CATCH
+		INSERT INTO @result (Result) VALUES (0);
+	END CATCH
+
+	SELECT Result FROM @result;
+	
 END
 GO
+
+DROP PROCEDURE spInsertarCalificacion
+
 
 
