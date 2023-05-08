@@ -113,14 +113,14 @@ CREATE PROCEDURE spActualizarCamarografo
 	@idUsuario INT
 AS 
 BEGIN
-UPDATE tbUsuarios
-SET correo = @correo,
-	nombre = @nombre,
-	contacto = @telefono,
-	imagen = @imagen,
-	dui = @dui,
-	pass = @contra
-WHERE idUsuario = @idUsuario
+	UPDATE tbUsuarios
+	SET correo = @correo,
+		nombre = @nombre,
+		contacto = @telefono,
+		imagen = @imagen,
+		dui = @dui,
+		pass = @contra
+	WHERE idUsuario = @idUsuario
 END
 GO
 
@@ -168,3 +168,16 @@ BEGIN
 	VALUES(@titulo, @detalles, @idFotoGaleria, @direccion, @fechaEvento, @horaInicio, @horaFin, @lugar, 
 	@confirmada, @cancela, @idFotografo, @idCliente)
 END
+GO
+
+-- Cambiar foto de perfil
+CREATE PROCEDURE spCambiarFotoPerfil
+	@imagen IMAGE,
+	@idCliente INT
+AS 
+BEGIN
+	UPDATE tbUsuarios
+	SET imagen = @imagen
+	WHERE idUsuario = @idCliente
+END
+GO
