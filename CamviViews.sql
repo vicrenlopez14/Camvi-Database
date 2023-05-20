@@ -46,6 +46,10 @@ FROM tbSesiones
 WHERE realizacion = 'En progreso';
 GO
 
+-- INSERT INTO tbSesiones (fechaEvento, horaInicio, horaFinalizacion)
+-- VALUES ('2023-05-19', '2023-05-19 10:00:00', '2023-05-19 23:00:00')
+
+
 CREATE VIEW vwSesionesFinalizadas
 AS
 SELECT idSesion,
@@ -128,5 +132,7 @@ FROM vwListaDeCamarografos
 
 CREATE VIEW vwPorcentajeClienteSatisfechos
 AS
-	SELECT SUM(promedio)/ COUNT(*)  as [Clientes satisfechos] from tbCalificacionSesion WHERE promedio >= 80.0
+SELECT SUM(promedio) / COUNT(*) as [Clientes satisfechos]
+from tbCalificacionSesion
+WHERE promedio >= 80.0
 GO

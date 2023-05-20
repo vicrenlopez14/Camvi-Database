@@ -2,6 +2,7 @@
 -- DROP DATABASE Camvi
 -- CREATE DATABASE Camvi;
 USE Camvi;
+GO
 
 CREATE TABLE tbTipoUsuarios
 (

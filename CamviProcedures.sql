@@ -1,4 +1,5 @@
 USE Camvi
+GO
 
 CREATE PROCEDURE spCrearAdministrador @nombre NVARCHAR(50),
                                       @correo VARCHAR(255),
@@ -50,7 +51,7 @@ BEGIN
 END
 GO
 
-EXEC spCrearAdministrador 'Camarografo', 'camarografo@camvi.com', '123', '123', '123'
+-- EXEC spCrearAdministrador 'Camarografo', 'camarografo@camvi.com', '123', '123', '123'
 
 
 CREATE PROCEDURE spRegistrarCliente @nombre NVARCHAR(50),
@@ -78,7 +79,7 @@ BEGIN
 END
 GO
 
-EXEC spRegistrarCliente '?', '?a', '123', '123', '123'
+-- EXEC spRegistrarCliente '?', '?a', '123', '123', '123'
 
 CREATE PROCEDURE spCodigoRecuperacion @idUsuario INT
 AS
