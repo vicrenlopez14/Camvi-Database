@@ -84,6 +84,10 @@ CREATE TABLE tbSesiones
 );
 
 ALTER TABLE tbSesiones
+    ADD fechaDeCreacion AS
+        (CONVERT(DATE, GETDATE()));
+
+ALTER TABLE tbSesiones
     ADD CONSTRAINT FK_tbSesiones_tbFotosGaleria FOREIGN KEY (idFotoGaleria)
         REFERENCES tbFotosGaleria (idFoto);
 
@@ -127,7 +131,8 @@ CREATE TABLE tbCalificacionSesion
 ALTER TABLE tbCalificacionSesion
     ADD promedio AS
             ((puntualidadFotografo + actitudFotografo + desempenoFotografo + profesionalismoFotografo +
-             presentacionPersonalFotografo + servicioDeAtencion + esperaDeRespuestas + calidadDelProductoFinal) / 8.0) * 100;
+              presentacionPersonalFotografo + servicioDeAtencion + esperaDeRespuestas + calidadDelProductoFinal) /
+             8.0) * 100;
 
 ALTER TABLE tbCalificacionSesion
     ADD CONSTRAINT FK_tbCalificacionSesion_tbUsuarios FOREIGN KEY (clienteId)
@@ -136,6 +141,10 @@ ALTER TABLE tbCalificacionSesion
 ALTER TABLE tbCalificacionSesion
     ADD CONSTRAINT FK_tbCalificacionSesion_tbSesiones FOREIGN KEY (sesionId)
         REFERENCES tbSesiones (idSesion);
+
+ALTER TABLE tbCalificacionSesion
+    ADD fechaCalificacion AS
+        (CONVERT(DATE, GETDATE()));
 
 CREATE TABLE tbTipoNotificacion
 (
