@@ -52,4 +52,15 @@ RETURN
 GO
 
 SELECT * FROM fnVerMasSesion(2)
+go
 
+
+CREATE FUNCTION fnCitasCliente(@idCliente INT)
+RETURNS TABLE
+AS
+RETURN
+	SELECT o.idSesion,o.titulo, u.nombre, o.fechaEvento 
+	FROM tbSesiones o
+	INNER JOIN tbUsuarios u ON o.idFotografo = u.idUsuario
+	WHERE idCliente = @idCliente
+GO
