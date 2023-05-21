@@ -38,4 +38,91 @@ RETURN
 	INNER JOIN tbTipoNotificacion o ON n.tipoNotificacionId=o.idTipoNotificacion
 	INNER JOIN tbUsuarios U ON n.usuarioId=U.idUsuario
 	WHERE n.usuarioId=@idUsuario AND n.vista=0;
+
 GO
+
+-- La funcion devuelve el numero de sesiones pendientes
+CREATE FUNCTION fnNumSesionesPendientesAdmin(@rangoDeFecha VARCHAR(20))
+RETURNS @nuevaTabla
+TABLE(numSesionesPendientes INT)
+AS 
+BEGIN
+	DECLARE @fechaInicio DATE
+	DECLARE @fechaFin DATE
+	DECLARE @numSesionesPendientes INT
+
+	IF @rangoDeFecha = 'Hoy' 
+	BEGIN 
+		SET @fechaInicio = CAST(GETDATE() AS DATE)
+		SET @fechaFin = CAST(GETDATE() AS DATE)
+	END
+
+	ELSE IF @rangoDeFecha = 'Semana actual'
+	BEGIN
+		SET @fechaInicio = CAST(DATEADD(wk, DATEDIFF(wk, 0, GETDATE()), 0) AS DATE)
+		SET @fechaFin = CAST(DATEADD(wk, DATEDIFF(wk, 0, GETDATE()), 6) AS DATE)
+	END
+
+	ELSE IF @rangoDeFecha = 'Mes actual'
+	BEGIN
+		SET @fechaInicio = CAST(DATEADD(mm, DATEDIFF(mm, 0, GETDATE()), 0) AS DATE)
+		SET @fechaFin = CAST(DATEADD(mm, DATEDIFF(mm, 0, GETDATE()) + 1, -1) AS DATE)
+	END
+
+	SELECT @numSesionesPendientes = COUNT(*) FROM tbSesiones
+									WHERE fechaEvento BETWEEN @fechaInicio AND @fechaFin AND realizacion = 'Pendiente'
+
+    INSERT INTO @nuevaTabla (numSesionesPendientes)
+    VALUES (@numSesionesPendientes);
+    RETURN
+
+END
+
+-- La funcion devuelve el numero de sesiones completadas/finalizadas
+CREATE FUNCTION fnSesionesCompletadasAdmin(@rangoDeFecha VARCHAR(20))
+RETURNS @nuevaTabla
+TABLE(numSesionesCompletadas INT, mensaje VARCHAR(50))
+AS 
+BEGIN
+	DECLARE @fechaInicio DATE
+	DECLARE @fechaFin DATE
+	DECLARE @numSesionesCompletadas INT
+	DECLARE @mensaje VARCHAR(50)
+
+	IF @rangoDeFecha = 'Hoy'
+	BEGIN 
+		SET @fechaInicio = CAST(GETDATE() AS DATE)
+		SET @fechaFin = CAST(GETDATE() AS DATE)
+	END
+
+	ELSE IF @rangoDeFecha = 'Semana actual'
+	BEGIN
+		SET @fechaInicio = CAST(DATEADD(wk, DATEDIFF(wk, 0, GETDATE()), 0) AS DATE)
+		SET @fechaFin = CAST(DATEADD(wk, DATEDIFF(wk, 0, GETDATE()), 6) AS DATE)
+	END
+
+	ELSE IF @rangoDeFecha = 'Mes actual'
+	BEGIN
+		SET @fechaInicio = CAST(DATEADD(mm, DATEDIFF(mm, 0, GETDATE()), 0) AS DATE)
+		SET @fechaFin = CAST(DATEADD(mm, DATEDIFF(mm, 0, GETDATE()) + 1, -1) AS DATE)
+	END
+
+	SELECT @numSesionesCompletadas = COUNT(*) FROM tbSesiones
+									WHERE fechaEvento BETWEEN @fechaInicio AND @fechaFin AND realizacion = 'Finalizado'
+
+	IF @numSesionesCompletadas = 0
+	SET @mensaje = ' '
+	ELSE
+	SET @mensaje = 'Bien hecho'
+
+	INSERT INTO @nuevaTabla (numSesionesCompletadas, mensaje)
+    VALUES (@numSesionesCompletadas, @mensaje);
+
+    RETURN;
+
+END
+
+SELECT * FROM fnSesionesCompletadasAdmin('Hoy');
+
+
+
