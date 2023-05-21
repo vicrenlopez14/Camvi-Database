@@ -1,6 +1,5 @@
 USE Camvi
 
-
 CREATE FUNCTION fnIniciarSesion(@correo VARCHAR(255), @pass VARCHAR(25))
     RETURNS INT
 AS
@@ -76,6 +75,7 @@ BEGIN
     VALUES (@numSesionesPendientes);
     RETURN
 END
+GO
 
 -- La funcion devuelve el nombre de los camarografos disponibles
 CREATE FUNCTION fnCamarografosDisponibles(@rangoDeFecha VARCHAR(20))
@@ -115,7 +115,9 @@ BEGIN
     RETURN
 END
 
+GO
 SELECT * FROM fnCamarografosDisponibles('Mes actual');
+GO
 
 -- La funcion devuelve el numero de sesiones completadas/finalizadas
 CREATE FUNCTION fnSesionesCompletadasAdmin(@rangoDeFecha VARCHAR(20))
@@ -159,7 +161,8 @@ BEGIN
     RETURN;
 END
 
+GO
 SELECT * FROM fnSesionesCompletadasAdmin('Hoy');
-
+GO
 
 
