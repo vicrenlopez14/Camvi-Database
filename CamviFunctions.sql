@@ -75,22 +75,20 @@ BEGIN
     INSERT INTO @nuevaTabla (numSesionesPendientes)
     VALUES (@numSesionesPendientes);
     RETURN
-
 END
 
--- La funcion devuelve el nombre de camarografos disponibles
-ALTER FUNCTION fnNombreCamarografosLibres(@rangoDeFecha VARCHAR(20))
-RETURNS @TablaCamarografosLibres
-TABLE(nombreCamarografos VARCHAR(100))
+-- La funcion devuelve el nombre de los camarografos disponibles
+CREATE FUNCTION fnCamarografosDisponibles(@rangoDeFecha VARCHAR(20))
+RETURNS @TablaCamarografosLibres TABLE (camarografosLibres VARCHAR(100))
 AS
 BEGIN
+
 	DECLARE @fechaInicio DATE
 	DECLARE @fechaFin DATE
-	DECLARE @camarografosLibres VARCHAR(100)
-
-	IF @rangoDeFecha = 'Hoy'
+	
+	IF @rangoDeFecha = 'Hoy' 
 	BEGIN 
-		SET @fechaInicio = CAST(GETDATE() AS DATE)
+		SET @fechaInicio= CAST(GETDATE() AS DATE)
 		SET @fechaFin = CAST(GETDATE() AS DATE)
 	END
 
@@ -105,24 +103,19 @@ BEGIN
 		SET @fechaInicio = CAST(DATEADD(mm, DATEDIFF(mm, 0, GETDATE()), 0) AS DATE)
 		SET @fechaFin = CAST(DATEADD(mm, DATEDIFF(mm, 0, GETDATE()) + 1, -1) AS DATE)
 	END
-
-	SELECT TOP 3 @camarografosLibres = U.nombre
-    FROM tbUsuarios AS U
-    LEFT JOIN tbSesiones AS S
-    ON U.idUsuario = S.idFotografo
-    AND S.fechaEvento BETWEEN @fechaInicio AND @fechaFin
-    WHERE S.idFotografo IS NULL
-    AND U.tipoUsuario = 2
-
-	IF @camarografosLibres IS NULL
-	SET @camarografosLibres = 'Todos los camarografos estaran ocupados'
-
-	INSERT INTO @TablaCamarografosLibres (nombreCamarografos)
-	VALUES(@camarografosLibres)
-	RETURN
+	
+		INSERT INTO @TablaCamarografosLibres (camarografosLibres)
+		(SELECT TOP 3 SUBSTRING(U.nombre, 1, CHARINDEX(' ', U.nombre)-1)
+        FROM tbUsuarios AS U
+        LEFT JOIN tbSesiones AS S
+        ON U.idUsuario = S.idFotografo
+        AND S.fechaEvento BETWEEN @fechaInicio AND @fechaFin
+        WHERE S.idFotografo IS NULL
+        AND U.tipoUsuario = 2)
+    RETURN
 END
 
-SELECT * FROM fnNombreCamarografosLibres('Mes actual');
+SELECT * FROM fnCamarografosDisponibles('Mes actual');
 
 -- La funcion devuelve el numero de sesiones completadas/finalizadas
 CREATE FUNCTION fnSesionesCompletadasAdmin(@rangoDeFecha VARCHAR(20))
@@ -164,7 +157,6 @@ BEGIN
 	INSERT INTO @nuevaTabla (numSesionesCompletadas, mensaje)
     VALUES (@numSesionesCompletadas, @mensaje);
     RETURN;
-
 END
 
 SELECT * FROM fnSesionesCompletadasAdmin('Hoy');
