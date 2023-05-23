@@ -88,10 +88,12 @@ FROM tbUsuarios
 WHERE tipoUsuario = 2)
 
 CREATE VIEW vwNombresCamarografosDesocupados AS
-SELECT nombre
+SELECT nombre AS Nombre
 FROM tbUsuarios
 WHERE tipoUsuario = 2
-  AND idUsuario NOT IN (SELECT idFotografo FROM tbSesiones WHERE realizacion = 'En progreso');
+AND idUsuario NOT IN (SELECT idFotografo FROM tbSesiones WHERE realizacion = 'En progreso');
+
+SELECT * FROM vwNombresCamarografosDesocupados
 
 CREATE VIEW vwNumeroCamarografosDesocupados
 AS

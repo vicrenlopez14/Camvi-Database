@@ -173,3 +173,32 @@ BEGIN
 	WHERE idUsuario = @idCliente
 END
 GO
+
+---Cambiar contraseña
+CREATE PROCEDURE spCambiarContrasenia @correo VARCHAR(255),
+									  @codigoRecuperacion VARCHAR(10),
+									  @NuevaContra VARCHAR(50)
+AS
+BEGIN
+	 IF NOT EXISTS (
+        SELECT 1
+        FROM tbCodigosRecuperacion C
+        INNER JOIN tbUsuarios U ON C.usuario = U.idUsuario
+        WHERE U.correo = @correo AND C.codigo = @codigoRecuperacion
+    )
+    BEGIN
+        RAISERROR('Vuelve a revisar tu correo o codigo de recuperacion', 16, 1);
+        RETURN;
+    END;
+
+	UPDATE tbUsuarios
+    SET pass = @NuevaContra
+    WHERE correo = @correo;
+
+	DELETE FROM tbCodigosRecuperacion
+    WHERE codigo = @codigoRecuperacion;
+
+END
+GO
+EXEC spCambiarContrasenia '20190189@ricaldone.edu.sv', '126', '3145' 
+GO
