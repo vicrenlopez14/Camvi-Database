@@ -53,3 +53,18 @@ RETURN
 GO
 
 select * from fnSesionesClientesDetalle(4) 
+
+use Camvi
+
+select * from tbSesiones
+
+
+CREATE FUNCTION fnCitasCliente(@idUsuario INT)
+RETURNS TABLE
+AS
+RETURN
+	SELECT s.idSesion, s.titulo,u.nombre, s.fechaEvento
+	FROM tbSesiones s 
+	INNER JOIN tbUsuarios u ON s.idFotografo = u.idUsuario
+	WHERE u.idUsuario = @idUsuario
+GO
