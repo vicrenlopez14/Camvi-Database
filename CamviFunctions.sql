@@ -39,3 +39,17 @@ RETURN
 	INNER JOIN tbUsuarios U ON n.usuarioId=U.idUsuario
 	WHERE n.usuarioId=@idUsuario AND n.vista=0;
 GO
+
+
+CREATE FUNCTION fnSesionesClientesDetalle(@idSesion INT)
+RETURNS TABLE
+AS
+RETURN
+	SELECT s.titulo, s.detalles, s.lugar,s.fechaEvento, s.horaInicio, s.horaFinalizacion, u.nombre, u.contacto, u.dui, eu.nombre AS 'Nombre del fotografo'
+	FROM tbSesiones s
+	INNER JOIN tbUsuarios u ON s.idCliente= u.idUsuario
+	INNER JOIN tbUsuarios eu ON s.idFotografo = eu.idUsuario
+	WHERE eu.tipoUsuario=2 AND s.idSesion = @idSesion
+GO
+
+select * from fnSesionesClientesDetalle(4) 
