@@ -175,7 +175,7 @@ GO
 CREATE PROCEDURE spCambiarFotoPerfil
 	@imagen IMAGE,
 	@idCliente INT
-AS 
+AS
 BEGIN
 	UPDATE tbUsuarios
 	SET imagen = @imagen
