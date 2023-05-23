@@ -69,7 +69,7 @@ CREATE TABLE tbFotosGaleria
 CREATE TABLE tbSesiones
 (
     idSesion         INT PRIMARY KEY IDENTITY (1,1),
-    titulo           VARCHAR(25),
+    titulo           VARCHAR(100),
     detalles         VARCHAR(255),
     idFotoGaleria    INT,
     direccionEvento  VARCHAR(200),

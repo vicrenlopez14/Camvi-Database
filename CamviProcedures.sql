@@ -93,15 +93,6 @@ EXEC spCodigoRecuperacion 2
 GO
 
 
--- Limpiar notificaciones
-CREATE PROCEDURE spLimpiarNotificaciones
-	@idUsuario INT
-AS
-BEGIN
-	DELETE FROM tbNotificaciones
-	WHERE usuarioId = @idUsuario
-END
-GO
 
 -- Actualizar informaci�n propia
 CREATE PROCEDURE spActualizarCamarografo
