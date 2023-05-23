@@ -57,7 +57,7 @@ select * from fnSesionesClientesDetalle(4)
 use Camvi
 
 select * from tbSesiones
-
+GO
 
 CREATE FUNCTION fnCitasCliente(@idUsuario INT)
 RETURNS TABLE
