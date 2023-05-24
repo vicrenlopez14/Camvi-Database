@@ -29,6 +29,8 @@ CREATE FUNCTION dbo.fnVerMasCamarografo(@idCamarografo int)
         WHERE idCamarografo = @idCamarografo
 GO
 
+SELECT * from fnVerMasCamarografo(4)
+
 CREATE FUNCTION fnListaNotificaciones(@idUsuario int)
     RETURNS TABLE
         AS

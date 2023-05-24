@@ -18,18 +18,21 @@ GO
 
 CREATE VIEW vwSesionesSinFotografo
 AS
-SELECT idSesion,
-       direccionEvento,
-       fechaEvento,
-       horaInicio,
-       horaFinalizacion,
-       lugar,
-       confirmada,
-       idFotografo,
-       idCliente
+SELECT idSesion AS idSesion,
+	   titulo AS titulo,
+       direccionEvento AS direccionEvento,
+       fechaEvento AS fechaEvento,
+       horaInicio AS horaInicio,
+       horaFinalizacion AS horaFinalizacion,
+       lugar AS lugar,
+       confirmada AS confirmada,
+       idFotografo AS idFotografo,
+       idCliente AS idCliente
 FROM tbSesiones
 WHERE idFotografo IS NULL;
 GO
+
+SELECT * FROM  vwSesionesSinFotografo
 
 CREATE VIEW vwSesionesEnCurso
 AS
@@ -65,7 +68,7 @@ FROM tbSesiones
 WHERE realizacion = 'Finalizado';
 GO
 
-CREATE VIEW vwSesionesPendientes
+ALTER VIEW vwSesionesPendientes
 AS
 SELECT idSesion,
        direccionEvento,
