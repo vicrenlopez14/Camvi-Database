@@ -139,7 +139,7 @@ END
 GO
 
 -- Agendar cita
-CREATE PROCEDURE spAgendarCita
+ALTER PROCEDURE spAgendarCita
     @titulo VARCHAR(100),
 	@fecha DATE,
 	@horaInicio TIME,
@@ -148,21 +148,34 @@ CREATE PROCEDURE spAgendarCita
     @nombreCamarografo NVARCHAR(50),
 	@reservador NVARCHAR(50),
 	@dui VARCHAR(10),
-    @telefono VARCHAR(15)
+    @telefono VARCHAR(15),
+	@idFotoGaleria INT
 
 AS
 BEGIN
     DECLARE @idCliente INT
     DECLARE @idFotografo INT
+	DECLARE @result TABLE
+                    (
+                        Result INT
+                    );
 
+	BEGIN TRY
     SELECT @idCliente = idUsuario FROM tbUsuarios WHERE nombre = @reservador AND contacto = @telefono AND dui = @dui
     SELECT @idFotografo = idUsuario FROM tbUsuarios WHERE nombre = @nombreCamarografo
 
-    INSERT INTO tbSesiones (titulo, direccionEvento, fechaEvento, horaInicio, horaFinalizacion, lugar, idFotografo, idCliente)
-    VALUES (@titulo, @lugar, @fecha, @horaInicio, @horaFinal, @lugar, @idFotografo, @idCliente)
+    INSERT INTO tbSesiones (titulo, direccionEvento, fechaEvento, horaInicio, horaFinalizacion, lugar, idFotografo, idCliente, idFotoGaleria)
+    VALUES (@titulo, @lugar, @fecha, @horaInicio, @horaFinal, @lugar, @idFotografo, @idCliente, @idFotoGaleria)
+
+	END TRY
+    BEGIN CATCH
+        INSERT INTO @result (Result) VALUES (0);
+    END CATCH
+
+    SELECT Result FROM @result;
 END
 GO
-EXEC spAgendarCita 'Titulo de la sesion', '2023-05-22', '09:00:00', '11:00:00', 'Lugar del evento', 'Nombre del fotografo', 'Reservador', '12345678-9', '123456789', 
+EXEC spAgendarCita 'Titulo de la sesion', '2023-05-22', '09:00:00', '11:00:00', 'Lugar del evento', 'Nombre del fotografo', 'Reservador', '12345678-9', '123456789', NULL 
 GO
 
 -- Cambiar foto de perfil
