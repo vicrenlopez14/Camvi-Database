@@ -53,7 +53,6 @@ GO
 
 -- EXEC spCrearAdministrador 'Camarografo', 'camarografo@camvi.com', '123', '123', '123'
 
-
 CREATE PROCEDURE spRegistrarCliente @nombre NVARCHAR(50),
                                     @correo VARCHAR(255),
                                     @pass VARCHAR(25),
@@ -141,25 +140,29 @@ GO
 
 -- Agendar cita
 CREATE PROCEDURE spAgendarCita
-	@titulo VARCHAR(25),
-	@detalles VARCHAR(255),
-	@idFotoGaleria INT,
-	@direccion VARCHAR(200),
-	@fechaEvento DATE,
+    @titulo VARCHAR(100),
+	@fecha DATE,
 	@horaInicio TIME,
-	@horaFin TIME,
-	@lugar VARCHAR,
-	@confirmada BIT,
-	@cancela BIT,
-	@idFotografo INT,
-	@idCliente INT
+    @horaFinal TIME,
+	@lugar VARCHAR(255),
+    @nombreCamarografo NVARCHAR(50),
+	@reservador NVARCHAR(50),
+	@dui VARCHAR(10),
+    @telefono VARCHAR(15)
+
 AS
-BEGIN 
-	INSERT INTO tbSesiones(titulo, detalles, idFotoGaleria, direccionEvento, 
-	fechaEvento, horaInicio, horaFinalizacion, lugar, confirmada, cancelada, idFotografo, idCliente)
-	VALUES(@titulo, @detalles, @idFotoGaleria, @direccion, @fechaEvento, @horaInicio, @horaFin, @lugar, 
-	@confirmada, @cancela, @idFotografo, @idCliente)
+BEGIN
+    DECLARE @idCliente INT
+    DECLARE @idFotografo INT
+
+    SELECT @idCliente = idUsuario FROM tbUsuarios WHERE nombre = @reservador AND contacto = @telefono AND dui = @dui
+    SELECT @idFotografo = idUsuario FROM tbUsuarios WHERE nombre = @nombreCamarografo
+
+    INSERT INTO tbSesiones (titulo, direccionEvento, fechaEvento, horaInicio, horaFinalizacion, lugar, idFotografo, idCliente)
+    VALUES (@titulo, @lugar, @fecha, @horaInicio, @horaFinal, @lugar, @idFotografo, @idCliente)
 END
+GO
+EXEC spAgendarCita 'Titulo de la sesion', '2023-05-22', '09:00:00', '11:00:00', 'Lugar del evento', 'Nombre del fotografo', 'Reservador', '12345678-9', '123456789', 
 GO
 
 -- Cambiar foto de perfil
