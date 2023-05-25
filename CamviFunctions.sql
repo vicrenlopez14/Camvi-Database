@@ -44,7 +44,7 @@ CREATE FUNCTION fnListaNotificaciones(@idUsuario int)
 GO
 
 CREATE FUNCTION dbo.GetClientSatisfactionPercentage(@periodo VARCHAR(10))
-    RETURNS INT
+RETURNS INT
 AS
 BEGIN
     DECLARE @startDate DATE
@@ -53,53 +53,50 @@ BEGIN
     DECLARE @satisfactorias INT
 
     IF @periodo = 'Hoy'
-        BEGIN
-            SET @startDate = GETDATE()
-            SET @endDate = @startDate
-        END
+    BEGIN
+        SET @startDate = GETDATE()
+        SET @endDate = @startDate
+    END
+    ELSE IF @periodo = 'Semana'
+    BEGIN
+        SET @startDate = DATEADD(DAY, -7, GETDATE())
+        SET @endDate = GETDATE()
+    END
+    ELSE IF @periodo = 'Mes'
+    BEGIN
+        SET @startDate = DATEADD(MONTH, -1, GETDATE())
+        SET @endDate = GETDATE()
+    END
     ELSE
-        IF @periodo = 'Semana'
-            BEGIN
-                SET @startDate = DATEADD(DAY, -7, GETDATE())
-                SET @endDate = GETDATE()
-            END
-        ELSE
-            IF @periodo = 'Mes'
-                BEGIN
-                    SET @startDate = DATEADD(MONTH, -1, GETDATE())
-                    SET @endDate = GETDATE()
-                END
-            ELSE
-                BEGIN
-                    RETURN NULL;
-                END
+    BEGIN
+        RETURN NULL;
+    END
 
-    SET @totalCalificaciones = (SELECT COUNT(*)
-                                FROM tbCalificacionSesion
-                                WHERE fechaCalificacion >= @startDate
-                                  AND fechaCalificacion <= @endDate)
+    SET @totalCalificaciones = (
+        SELECT COUNT(*) FROM tbCalificacionSesion
+        WHERE fechaCalificacion >= @startDate AND fechaCalificacion <= @endDate
+    )
 
-    SET @satisfactorias = (SELECT COUNT(*)
-                           FROM tbCalificacionSesion
-                           WHERE fechaCalificacion >= @startDate
-                             AND fechaCalificacion <= @endDate
-                             AND promedio >= 80 -- Assuming 80 is the threshold for satisfaction
+    SET @satisfactorias = (
+        SELECT COUNT(*) FROM tbCalificacionSesion
+        WHERE fechaCalificacion >= @startDate AND fechaCalificacion <= @endDate
+            AND promedio >= 80 -- Assuming 80 is the threshold for satisfaction
     )
 
     IF @totalCalificaciones > 0
-        BEGIN
-            RETURN (@satisfactorias * 100) / @totalCalificaciones
-        END
+    BEGIN
+        RETURN (@satisfactorias * 100) / @totalCalificaciones
+    END
     ELSE
-        BEGIN
-            RETURN 0
-        END
+    BEGIN
+        RETURN 0
+    END
 
     RETURN NULL;
 END
 
 CREATE FUNCTION dbo.GetInsertedSessionsCount(@periodo VARCHAR(10))
-    RETURNS INT
+RETURNS INT
 AS
 BEGIN
     DECLARE @startDate DATE
@@ -107,108 +104,43 @@ BEGIN
     DECLARE @count INT
 
     IF @periodo = 'Hoy'
-        BEGIN
-            SET @startDate = GETDATE()
-            SET @endDate = @startDate
-        END
+    BEGIN
+        SET @startDate = GETDATE()
+        SET @endDate = @startDate
+    END
+    ELSE IF @periodo = 'Semana'
+    BEGIN
+        SET @startDate = DATEADD(DAY, -7, GETDATE())
+        SET @endDate = GETDATE()
+    END
+    ELSE IF @periodo = 'Mes'
+    BEGIN
+        SET @startDate = DATEADD(MONTH, -1, GETDATE())
+        SET @endDate = GETDATE()
+    END
     ELSE
-        IF @periodo = 'Semana'
-            BEGIN
-                SET @startDate = DATEADD(DAY, -7, GETDATE())
-                SET @endDate = GETDATE()
-            END
-        ELSE
-            IF @periodo = 'Mes'
-                BEGIN
-                    SET @startDate = DATEADD(MONTH, -1, GETDATE())
-                    SET @endDate = GETDATE()
-                END
-            ELSE
-                BEGIN
-                    RETURN NULL; -- Invalid periodo value
-                END
+    BEGIN
+        RETURN NULL; -- Invalid periodo value
+    END
 
-    SELECT @count = COUNT(*)
-    FROM tbSesiones
-    WHERE fechaDeCreacion >= @startDate
-      AND fechaDeCreacion <= @endDate
+    SELECT @count = COUNT(*) FROM tbSesiones
+    WHERE fechaDeCreacion >= @startDate AND fechaDeCreacion <= @endDate
 
     RETURN @count
 END
 
 
 CREATE FUNCTION dbo.GetUnassignedSessionCount()
-    RETURNS INT
+RETURNS INT
 AS
 BEGIN
     DECLARE @count INT
 
-    SELECT @count = COUNT(*)
-    FROM tbSesiones
+    SELECT @count = COUNT(*) FROM tbSesiones
     WHERE idFotografo IS NULL
 
     RETURN @count
 END
-
-CREATE FUNCTION fnSesionesPorStatus(@realizado VARCHAR(20))
-    RETURNS TABLE
-        AS
-        RETURN
-        SELECT s.idSesion,
-               s.direccionEvento,
-               s.fechaEvento,
-               s.horaInicio,
-               s.horaFinalizacion,
-               s.lugar,
-               s.confirmada,
-               s.idFotografo,
-               s.idCliente,
-               fg.foto
-        FROM tbSesiones s
-                 INNER JOIN tbFotosGaleria fg ON s.idFotoGaleria = fg.idFoto
-        WHERE s.realizacion = @realizado;
-
-CREATE FUNCTION fnGetSessionById(@sessionId INT)
-    RETURNS TABLE
-        AS
-        RETURN
-            (
-                SELECT s.idSesion                                   AS id,
-                       s.titulo,
-                       s.detalles,
-                       fg.foto                                      AS fotoGaleria,
-                       s.direccionEvento,
-                       CONVERT(VARCHAR(10), s.fechaEvento, 120)     AS fechaEvento,
-                       CONVERT(VARCHAR(8), s.horaInicio, 108)       AS horaInicio,
-                       CONVERT(VARCHAR(8), s.horaFinalizacion, 108) AS horaFinalizacion,
-                       s.lugar,
-                       s.confirmada,
-                       s.cancelada,
-                       s.idFotografo,
-                       s.idCliente,
-                       CONVERT(VARCHAR(10), s.fechaDeCreacion, 120) AS fechaCreacion,
-                       ''                                           AS realizacion,
-                       uc.nombre                                    AS clienteNombre,
-                       up.nombre                                    AS fotografoNombre
-                FROM tbSesiones s
-                         LEFT JOIN
-                     tbFotosGaleria fg ON fg.idFoto = s.idFotoGaleria
-                         LEFT JOIN
-                     tbUsuarios uc ON uc.idUsuario = s.idCliente
-                         LEFT JOIN
-                     tbUsuarios up ON up.idUsuario = s.idFotografo
-                WHERE s.idSesion = @sessionId
-            );
-
-CREATE FUNCTION fnGetUserByEmail (@email VARCHAR(255))
-RETURNS TABLE
-AS
-RETURN
-(
-    SELECT *
-    FROM tbUsuarios
-    WHERE correo = @email
-);
 
 -- La funcion devuelve el numero de sesiones pendientes
 CREATE FUNCTION fnNumSesionesPendientesAdmin(@rangoDeFecha VARCHAR(20))
@@ -365,12 +297,11 @@ CREATE FUNCTION fnSesionesCamarografos(@idUsuario INT)
 RETURNS TABLE
 AS
 RETURN
-	SELECT s.idSesion,s.titulo, s.detalles,s.idFotoGaleria,s.direccionEvento ,s.fechaEvento, s.horaInicio, s.horaFinalizacion, s.lugar,s.confirmada,
-	s.confirmada, s.cancelada, s.idFotografo, , s.idCliente, u.nombre, u.contacto, u.dui, eu.nombre AS 'Nombre del fotografo'
+	SELECT s.idSesion, s.titulo,s.idFotoGaleria,u.nombre, s.fechaEvento
 	FROM tbSesiones s
-	INNER JOIN tbUsuarios u ON s.idCliente= u.idUsuario
-	INNER JOIN tbUsuarios eu ON s.idFotografo = eu.idUsuario
-	WHERE idUsuario = @idUsuario
+	INNER JOIN tbUsuarios u ON s.idFotografo = u.idUsuario
+	INNER JOIN tbFotosGaleria i ON s.idFotoGaleria = i.idFoto
+	WHERE u.idUsuario = @idUsuario
 GO
 
 --para detalle
