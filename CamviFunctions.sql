@@ -292,7 +292,7 @@ RETURN
 	WHERE u.idUsuario = @idUsuario
 GO
 
-
+--para lista de sesiones
 CREATE FUNCTION fnSesionesCamarografos(@idUsuario INT)
 RETURNS TABLE
 AS
@@ -302,6 +302,18 @@ RETURN
 	INNER JOIN tbUsuarios u ON s.idCliente= u.idUsuario
 	INNER JOIN tbUsuarios eu ON s.idFotografo = eu.idUsuario
 	WHERE idUsuario = @idUsuario
+GO
+
+--para detalle
+CREATE FUNCTION fbSesionesCamarografosDetalle(@idSesion INT)
+RETURNS TABLE
+AS
+RETURN
+	SELECT s.titulo, s.detalles, s.lugar,s.fechaEvento, s.horaInicio, s.horaFinalizacion, u.nombre, u.contacto, u.dui, eu.nombre AS 'Nombre del fotografo'
+	FROM tbSesiones s
+	INNER JOIN tbUsuarios u ON s.idCliente= u.idUsuario
+	INNER JOIN tbUsuarios eu ON s.idFotografo = eu.idUsuario
+	WHERE eu.tipoUsuario=3 AND s.idSesion = @idSesion
 GO
 
 	
