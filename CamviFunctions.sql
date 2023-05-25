@@ -297,7 +297,8 @@ CREATE FUNCTION fnSesionesCamarografos(@idUsuario INT)
 RETURNS TABLE
 AS
 RETURN
-	SELECT s.titulo, s.detalles, s.lugar,s.fechaEvento, s.horaInicio, s.horaFinalizacion, u.nombre, u.contacto, u.dui, eu.nombre AS 'Nombre del fotografo'
+	SELECT s.idSesion,s.titulo, s.detalles,s.idFotoGaleria,s.direccionEvento ,s.fechaEvento, s.horaInicio, s.horaFinalizacion, s.lugar,s.confirmada,
+	s.confirmada, s.cancelada, s.idFotografo, , s.idCliente, u.nombre, u.contacto, u.dui, eu.nombre AS 'Nombre del fotografo'
 	FROM tbSesiones s
 	INNER JOIN tbUsuarios u ON s.idCliente= u.idUsuario
 	INNER JOIN tbUsuarios eu ON s.idFotografo = eu.idUsuario
@@ -315,5 +316,6 @@ RETURN
 	INNER JOIN tbUsuarios eu ON s.idFotografo = eu.idUsuario
 	WHERE eu.tipoUsuario=3 AND s.idSesion = @idSesion
 GO
+
 
 	
