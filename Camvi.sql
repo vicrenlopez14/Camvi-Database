@@ -15,7 +15,6 @@ VALUES ('Administrador'),
        ('Camarógrafo'),
        ('Cliente');
 
-
 CREATE TABLE tbUsuarios
 (
     idUsuario   INT PRIMARY KEY IDENTITY (1,1),
