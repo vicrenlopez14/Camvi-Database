@@ -102,7 +102,7 @@ CREATE PROCEDURE spActualizarCamarografo
 	@dui VARCHAR(10),
 	@contra NVARCHAR(50),
 	@idUsuario INT
-AS 
+AS
 BEGIN
 	UPDATE tbUsuarios
 	SET correo = @correo,
@@ -129,11 +129,11 @@ CREATE PROCEDURE spCalificarSesion
 	@idCliente INT,
 	@idSesion INT
 AS
-BEGIN 
-	INSERT INTO tbCalificacionSesion (puntualidadFotografo, actitudFotografo, 
-	desempenoFotografo, profesionalismoFotografo, presentacionPersonalFotografo, 
+BEGIN
+	INSERT INTO tbCalificacionSesion (puntualidadFotografo, actitudFotografo,
+	desempenoFotografo, profesionalismoFotografo, presentacionPersonalFotografo,
 	servicioDeAtencion, esperaDeRespuestas, calidadDelProductoFinal, comentarios, clienteId, sesionId)
-	VALUES (@puntualidad, @actitud, @desempenio, @profesionalismo, @presentacion, @servicioAtencion, @espera, @calidadProducto, 
+	VALUES (@puntualidad, @actitud, @desempenio, @profesionalismo, @presentacion, @servicioAtencion, @espera, @calidadProducto,
 	@comentarios, @idCliente, @idSesion)
 END
 GO
@@ -190,6 +190,18 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE dbo.GetSessionsByStatus
+    @status VARCHAR(20)
+AS
+BEGIN
+    IF @status = 'Pendiente'
+        SELECT idSesion, direccionEvento, fechaEvento, horaInicio, horaFinalizacion, lugar, confirmada, idFotografo, idCliente FROM vwSesionesPendientes
+    ELSE IF @status = 'En curso'
+        SELECT idSesion, direccionEvento, fechaEvento, horaInicio, horaFinalizacion, lugar, confirmada, idFotografo, idCliente FROM vwSesionesEnCurso
+    ELSE IF @status = 'Realizado'
+        SELECT idSesion, direccionEvento, fechaEvento, horaInicio, horaFinalizacion, lugar, confirmada, idFotografo, idCliente FROM vwSesionesFinalizadas
+END
+GO
 ---Cambiar contraseña
 CREATE PROCEDURE spCambiarContrasenia @correo VARCHAR(255),
 									  @codigoRecuperacion VARCHAR(10),

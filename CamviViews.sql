@@ -18,21 +18,22 @@ GO
 
 CREATE VIEW vwSesionesSinFotografo
 AS
-SELECT idSesion AS idSesion,
-	   titulo AS titulo,
-       direccionEvento AS direccionEvento,
-       fechaEvento AS fechaEvento,
-       horaInicio AS horaInicio,
+SELECT idSesion         AS idSesion,
+       titulo           AS titulo,
+       direccionEvento  AS direccionEvento,
+       fechaEvento      AS fechaEvento,
+       horaInicio       AS horaInicio,
        horaFinalizacion AS horaFinalizacion,
-       lugar AS lugar,
-       confirmada AS confirmada,
-       idFotografo AS idFotografo,
-       idCliente AS idCliente
+       lugar            AS lugar,
+       confirmada       AS confirmada,
+       idFotografo      AS idFotografo,
+       idCliente        AS idCliente
 FROM tbSesiones
 WHERE idFotografo IS NULL;
 GO
 
-SELECT * FROM  vwSesionesSinFotografo
+SELECT *
+FROM vwSesionesSinFotografo
 
 CREATE VIEW vwSesionesEnCurso
 AS
@@ -69,18 +70,18 @@ WHERE realizacion = 'Finalizado';
 GO
 
 ALTER VIEW vwSesionesPendientes
-AS
-SELECT idSesion,
-       direccionEvento,
-       fechaEvento,
-       horaInicio,
-       horaFinalizacion,
-       lugar,
-       confirmada,
-       idFotografo,
-       idCliente
-FROM tbSesiones
-WHERE realizacion = 'Pendiente';
+    AS
+        SELECT idSesion,
+               direccionEvento,
+               fechaEvento,
+               horaInicio,
+               horaFinalizacion,
+               lugar,
+               confirmada,
+               idFotografo,
+               idCliente
+        FROM tbSesiones
+        WHERE realizacion = 'Pendiente';
 GO
 
 CREATE VIEW vwNumeroDeCamarografosRegistrados
@@ -91,12 +92,13 @@ FROM tbUsuarios
 WHERE tipoUsuario = 2)
 
 CREATE VIEW vwNombresCamarografosDesocupados AS
-SELECT nombre AS Nombre
+SELECT idUsuario, nombre AS Nombre
 FROM tbUsuarios
 WHERE tipoUsuario = 2
-AND idUsuario NOT IN (SELECT idFotografo FROM tbSesiones WHERE realizacion = 'En progreso');
+  AND idUsuario NOT IN (SELECT idFotografo FROM tbSesiones WHERE realizacion = 'En progreso');
 
-SELECT * FROM vwNombresCamarografosDesocupados
+SELECT *
+FROM vwNombresCamarografosDesocupados
 
 CREATE VIEW vwNumeroCamarografosDesocupados
 AS
@@ -141,3 +143,5 @@ SELECT SUM(promedio) / COUNT(*) as [Clientes satisfechos]
 from tbCalificacionSesion
 WHERE promedio >= 80.0
 GO
+
+
