@@ -292,29 +292,36 @@ RETURN
 	WHERE u.idUsuario = @idUsuario
 GO
 
---para lista de sesiones
+
+--PARA SESIONES CAMAROGRAFO LISTA
 CREATE FUNCTION fnSesionesCamarografos(@idUsuario INT)
 RETURNS TABLE
-AS
+AS 
 RETURN
-	SELECT s.idSesion, s.titulo,s.idFotoGaleria,u.nombre, s.fechaEvento
+	SELECT s.idSesion, s.titulo, s.detalles,g.foto, s.direccionEvento, s.fechaEvento, s.horaInicio, s.horaFinalizacion,s.lugar,s.confirmada, s.cancelada, u.nombre, u.contacto, u.dui,
+	ue.nombre AS 'Nombre del fotografo'
 	FROM tbSesiones s
-	INNER JOIN tbUsuarios u ON s.idFotografo = u.idUsuario
-	INNER JOIN tbFotosGaleria i ON s.idFotoGaleria = i.idFoto
-	WHERE u.idUsuario = @idUsuario
+	INNER JOIN tbFotosGaleria g  ON s.idFotoGaleria= g.idFoto
+	INNER JOIN tbUsuarios u ON s.idCliente = u.idUsuario
+	INNER JOIN tbUsuarios ue ON s.idFotografo = ue.idUsuario
+	WHERE s.idFotografo = @idUsuario
 GO
 
---para detalle
-CREATE FUNCTION fbSesionesCamarografosDetalle(@idSesion INT)
+drop function fnSesionesCamarografos
+--PARA SESIONES CAMAROGRAFO DETALLE
+CREATE FUNCTION fnSesionesCamarografosDetalle(@idSesion INT)
 RETURNS TABLE
-AS
+AS 
 RETURN
-	SELECT s.titulo, s.detalles, s.lugar,s.fechaEvento, s.horaInicio, s.horaFinalizacion, u.nombre, u.contacto, u.dui, eu.nombre AS 'Nombre del fotografo'
+	SELECT s.idSesion, s.titulo, s.detalles,g.foto, s.direccionEvento, s.fechaEvento, s.horaInicio, s.horaFinalizacion,s.lugar,s.confirmada, s.cancelada, u.nombre, u.contacto, u.dui,
+	ue.nombre AS 'Nombre del fotografo'
 	FROM tbSesiones s
-	INNER JOIN tbUsuarios u ON s.idCliente= u.idUsuario
-	INNER JOIN tbUsuarios eu ON s.idFotografo = eu.idUsuario
-	WHERE eu.tipoUsuario=3 AND s.idSesion = @idSesion
+	INNER JOIN tbFotosGaleria g  ON s.idFotoGaleria= g.idFoto
+	INNER JOIN tbUsuarios u ON s.idCliente = u.idUsuario
+	INNER JOIN tbUsuarios ue ON s.idFotografo = ue.idUsuario
+	WHERE s.idSesion = @idSesion
 GO
+
 
 
 	
